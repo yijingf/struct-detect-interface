@@ -34,7 +34,7 @@ async function uploadJsonToGoogleSheets(json: any) {
   });
 
   const doc = new GoogleSpreadsheet(
-    "1yciiCTIUoJdoQRs1mD4_CvHsC96Iq4iny3N_IijsEAw",
+    "1X6upSxkXYwhiQ7cOl5jdNENIrQH9ZXpZ0nC6NYJlgjg",
     jwtFromEnv
   );
 

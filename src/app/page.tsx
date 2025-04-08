@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 const fileNames = [
   "03.wav",
-  "04.wav",
-  "05.wav",
+//   "04.wav",
+//   "05.wav",
 ];
 
 const randomizedFileNames = fileNames.sort(() => Math.random() - 0.5);
