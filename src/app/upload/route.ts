@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error uploading to Google Sheets:", error);
+    console.error("email", process.env.client_email);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

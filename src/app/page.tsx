@@ -39,7 +39,8 @@ export default function Home() {
 
   // Define the order of phases and phrases
   const actions = ["PromptCountdown", "Phrase"];
-  const phases = ["Anchor", "Baseline", "Proposed"];
+//   const phases = ["Anchor", "Baseline", "Proposed"];
+  const phases = ["Anchor"];
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
