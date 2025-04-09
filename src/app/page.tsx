@@ -180,8 +180,8 @@ export default function Home() {
   };
 
   const exportKeyPresses = async () => {
-    const json = JSON.stringify('a', null, 2);
     // const json = JSON.stringify(keyPresses);
+    const json = JSON.stringify("test");
     console.log(json);
     const response = await fetch("/upload", {
       method: "POST",
