@@ -18,6 +18,7 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
+    `excerpts/Anchor/${filename}`,
     // `excerpts/${first}/${filename}`,
     // `excerpts/${second}/${filename}`,
   ];
@@ -180,8 +181,8 @@ export default function Home() {
   };
 
   const exportKeyPresses = async () => {
-    // const json = JSON.stringify(keyPresses);
-    const json = JSON.stringify("test");
+    const json = JSON.stringify(keyPresses);
+    // const json = JSON.stringify("test");
     console.log(json);
     const response = await fetch("/upload", {
       method: "POST",
