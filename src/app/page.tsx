@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const fileNames = [
-    'test.wav',
-//   "03.wav",
+    "test.wav",
+    "test1.wav",
 //   "04.wav",
 //   "05.wav",
 ];
@@ -18,7 +18,7 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
-    `excerpts/Basline/${filename}`,
+    // `excerpts/Baseline/${filename}`,
     // `excerpts/${first}/${filename}`,
     // `excerpts/${second}/${filename}`,
   ];
