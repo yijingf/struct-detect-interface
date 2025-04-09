@@ -18,9 +18,8 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
-    // `excerpts/Baseline/${filename}`,
-    // `excerpts/${first}/${filename}`,
-    // `excerpts/${second}/${filename}`,
+    `excerpts/${first}/${filename}`,
+    `excerpts/${second}/${filename}`,
   ];
 });
 
@@ -41,8 +40,7 @@ export default function Home() {
 
   // Define the order of phases and phrases
   const actions = ["PromptCountdown", "Phrase"];
-  const phases = ["Anchor"]
-//   const phases = ["Anchor", "Baseline", "Proposed"];
+  const phases = ["Anchor", "Baseline", "Proposed"];
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -183,8 +181,6 @@ export default function Home() {
   const exportKeyPresses = async () => {
     const json = JSON.stringify(keyPresses);
     // const json = JSON.stringify("test");
-    console.log(json);
-    console.log(process.env.client_email);
     const response = await fetch("/upload", {
       method: "POST",
       headers: {
@@ -253,11 +249,13 @@ export default function Home() {
             <div className="text-xl font-bold text-gray-800">
               Run {currentPhraseIndex + 1}
             </div>
-            <div className="text-xl font-bold text-gray-800">
+
+            {/* <div className="text-xl font-bold text-gray-800">
               {phases[currentPhaseIndex] == "Reference"
                 ? "Practice Phase"
                 : "Test Phase"}
-            </div>
+            </div> */}
+
           </div>
           <div className="flex justify-center items-center flex-grow">
             <div className="text-center">
