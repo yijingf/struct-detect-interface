@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const fileNames = [
-    "test.wav",
-    "test1.wav",
+    "03.wav",
+    "04.wav",
 //   "04.wav",
 //   "05.wav",
 ];
