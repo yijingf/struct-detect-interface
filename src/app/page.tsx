@@ -18,8 +18,8 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
-    `excerpts/${first}/${filename}`,
-    `excerpts/${second}/${filename}`,
+    `excerpts/Baseline/${filename}`,
+    // `excerpts/${second}/${filename}`,
   ];
 });
 
@@ -27,6 +27,14 @@ export default function Home() {
   const [stage, setStage] = useState<"start" | "training" | "end">("start");
   const [isRecording, setIsRecording] = useState(false);
   const [keyPresses, setKeyPresses] = useState<Record<string, number[]>>({});
+
+  const [ratings, setRatings] = useState<
+      Record<string, { rating1: number; rating2: number }>
+    >({});
+
+  const [hasSubmittedRating, setHasSubmittedRating] = useState(false);
+  const [rating1, setRating1] = useState<number | null>(null);
+  const [rating2, setRating2] = useState<number | null>(null);
 
   const [startTime, setStartTime] = useState<number | null>(null);
 
@@ -36,17 +44,27 @@ export default function Home() {
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [currentActionIndex, setCurrentActionIndex] = useState(-1);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(1);
 
   // Define the order of phases and phrases
-  const actions = ["PromptCountdown", "Phrase"];
-  const phases = ["Anchor", "Baseline", "Proposed"];
+//   const actions = ["PromptCountdown", "Phrase", "Rate"];
+  const actions = ["Phrase", "Rate", "PromptCountdown"];
+  const phases = ["Anchor", "Baseline"];
+//   const phases = ["Anchor", "Baseline", "Proposed"];
+
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Function to advance to the next phase or phrase
   const advancePhase = () => {
+
+    if (actions[currentActionIndex] === "Rate" && !hasSubmittedRating) {
+        return; // Wait until submit is clicked
+      }
+    // setHasSubmittedRating(false); // Reset for next time
+
     const nextActionIndex = currentActionIndex + 1;
+
     const nextPhaseIndex =
       nextActionIndex >= actions.length
         ? currentPhaseIndex + 1
@@ -55,6 +73,7 @@ export default function Home() {
       nextPhaseIndex >= phases.length
         ? currentPhraseIndex + 1
         : currentPhraseIndex;
+
 
     if (nextActionIndex >= actions.length) {
       setCurrentActionIndex(0);
@@ -79,6 +98,7 @@ export default function Home() {
     setAudioSrc(phrases[currentPhraseIndex][currentPhaseIndex]);
   };
 
+
   useEffect(() => {
     // This effect will play/pause the audio based on the audioPlaying state
     if (audioPlaying && audioRef.current) {
@@ -99,8 +119,15 @@ export default function Home() {
       setIsRecording(true);
       setStartTime(performance.now());
       setAudioPlaying(true);
+      setHasSubmittedRating(false); // Reset for next time
       return;
     }
+
+    if (actions[currentActionIndex] === "Rate") {
+        advancePhase();
+        return;
+    }
+
 
     setIsRecording(false);
 
@@ -122,7 +149,7 @@ export default function Home() {
         clearInterval(countdownInterval);
       }
     };
-  }, [currentActionIndex]);
+  }, [currentActionIndex, hasSubmittedRating]);
 
   useEffect(() => {
     // When the audio ends, move to the silence phase
@@ -146,7 +173,7 @@ export default function Home() {
 
   useEffect(() => {
     const recordKeyPress = (event: KeyboardEvent) => {
-      if (event.repeat || !isRecording || event.key !== " ") return;
+      if (event.repeat || !isRecording || event.key < 'A' || event.key > 'z') return;
 
       const currentTime = performance.now();
 
@@ -173,14 +200,44 @@ export default function Home() {
     };
   }, [isRecording, startTime]);
 
+  
+
   const startTraining = () => {
     setStage("training");
+    setIsRecording(true);
     advancePhase();
   };
 
+
   const exportKeyPresses = async () => {
-    const json = JSON.stringify(keyPresses);
-    // const json = JSON.stringify("test");
+    const flatRatings = Object.fromEntries(
+        Object.entries(ratings).map(([key, value]) => [
+          key,
+          Object.values(value)
+        ])
+      );
+    
+    const payload = {
+        keyPresses,
+        flatRatings,
+      };
+
+    const flattened: Record<string, string> = {};
+
+    for (const [key, value] of Object.entries(payload.keyPresses)) {
+        const shortKey = key.replace("excerpts/", "");
+        flattened[`keyPresses-${shortKey}`] = value.join(", ");
+      }
+
+    // Flatten flatRatings
+    for (const [key, value] of Object.entries(payload.flatRatings)) {
+        const shortKey = key.replace("excerpts/", "");
+        flattened[`ratings-${shortKey}`] = value.join(", ");
+    }
+
+    // const json = JSON.stringify(keyPresses);
+    const json = JSON.stringify(flattened);
+    console.log(json);
     const response = await fetch("/upload", {
       method: "POST",
       headers: {
@@ -226,7 +283,7 @@ export default function Home() {
               Sample Music Excerpt
             </h2>
             <audio
-              src="phrases/Reference/03.wav"
+              src="excerpts/Anchor/03.wav"
               preload="auto"
               controls
               className="mb-2 mx-auto"
@@ -260,13 +317,100 @@ export default function Home() {
           <div className="flex justify-center items-center flex-grow">
             <div className="text-center">
               <audio ref={audioRef} src={audioSrc} preload="auto" />
-              <div className="text-3xl font-bold text-gray-800 mb-6">
-                Please tap to the beats in the way you perceive them.
-              </div>
+
               <div className="text-2xl text-gray-800 mb-6">
-                {actions[currentActionIndex] === "Phrase"
-                  ? "Start tapping"
-                  : `Countdown: ${countdown} seconds`}
+
+              {actions[currentActionIndex] === "Rate" ? (
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-gray-800 mb-6">
+                        Please rate the excerpt you just heard.
+                    </div>
+                    
+                    <div className="mb-6">
+                        <div className="text-lg text-gray-700 mb-2">
+                            1. How natural did the rhythm feel?
+                        </div>
+                        <div className="flex justify-center space-x-4">
+                            {[1, 2, 3, 4, 5].map((num) => (
+                                <button
+                                key={num}
+                                onClick={() => setRating1(num)}
+                                className={`w-10 h-10 rounded-full ${
+                                    rating1 === num
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-gray-200 text-gray-700"
+                                }`}
+                                >
+                                    {num}
+                                </button>))}
+                        </div>
+                    </div>
+
+                    <div className="mb-6">
+                        <div className="text-lg text-gray-700 mb-2">
+                            2. How well could you synchronize your taps?
+                        </div>
+                        <div className="flex justify-center space-x-4">
+                            {[1, 2, 3, 4, 5].map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => setRating2(num)}
+                                    className={`w-10 h-10 rounded-full ${
+                                    rating2 === num
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-gray-200 text-gray-700"
+                                    }`}
+                                >
+                                    {num}
+                                </button>
+                                ))}
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => {
+                            // Save ratings
+                            const key = phrases[currentPhraseIndex][currentPhaseIndex];
+                            setRatings((prevRatings) => ({
+                                ...prevRatings,
+                                [key]: { rating1: rating1!, rating2: rating2! },
+                            }));
+                        
+                            setHasSubmittedRating(true);
+                            setRating1(null); // Reset for next round
+                            setRating2(null);
+                            // advancePhase();
+                        }}
+                        disabled={rating1 === null || rating2 === null}
+                        className={`mt-4 px-6 py-2 font-bold rounded ${
+                            rating1 !== null && rating2 !== null
+                            ? "bg-blue-600 text-white hover:bg-blue-700"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                        >
+                        Submit Rating
+                        </button>
+                    </div>
+              ): actions[currentActionIndex] === "Phrase" ? (
+                    <div className="text-center">
+                        <audio ref={audioRef} src={audioSrc} preload="auto" />
+                        <div className="text-3xl font-bold text-gray-800 mb-6">
+                            Please tap to the beats in the way you perceive them.
+                        </div>
+                        <div className="text-2xl text-gray-800 mb-6">Start tapping</div>
+                    </div>
+                ) : (
+                    <div className="text-center">
+                        <div className="text-3xl font-bold text-gray-800 mb-6">
+                            Get ready for the next excerpt.
+                        </div>
+                        <div className="text-2xl text-gray-800 mb-6">
+                            Countdown: {countdown} seconds
+                            </div>
+                        </div>
+                )}
+
+
               </div>
             </div>
           </div>

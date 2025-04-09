@@ -48,8 +48,10 @@ async function uploadJsonToGoogleSheets(json: any) {
   const id = randomUUID();
   const rows = Object.keys(json).map((key) => ({
     id: id,
-    phrase: key.replace("excerpts/", ""),
-    values: `[${json[key].join(", ")}]`,
+    phrase: key,
+    values: json[key],
+    // phrase: key.replace("excerpts/", ""),
+    // values: `[${json[key].join(", ")}]`,
   })); // transform the JSON into an array of objects
 
   await sheet.addRows(rows); // add the objects as rows in the sheet
