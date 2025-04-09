@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const fileNames = [
-  "03.wav",
+    'test.wav',
+//   "03.wav",
 //   "04.wav",
 //   "05.wav",
 ];
@@ -16,8 +17,8 @@ const shuffleExp = () =>
 const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
-    // `excerpts/Anchor/${filename}`,
-    `excerpts/${first}/${filename}`,
+    `excerpts/Anchor/${filename}`,
+    // `excerpts/${first}/${filename}`,
     // `excerpts/${second}/${filename}`,
   ];
 });
@@ -39,8 +40,8 @@ export default function Home() {
 
   // Define the order of phases and phrases
   const actions = ["PromptCountdown", "Phrase"];
-//   const phases = ["Anchor", "Baseline", "Proposed"];
   const phases = ["Anchor"];
+//   const phases = ["Anchor", "Baseline", "Proposed"];
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -179,7 +180,8 @@ export default function Home() {
   };
 
   const exportKeyPresses = async () => {
-    const json = JSON.stringify(keyPresses);
+    const json = JSON.stringify('a', null, 2);
+    // const json = JSON.stringify(keyPresses);
     console.log(json);
     const response = await fetch("/upload", {
       method: "POST",
