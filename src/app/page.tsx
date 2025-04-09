@@ -41,7 +41,7 @@ export default function Home() {
 
   // Define the order of phases and phrases
   const actions = ["PromptCountdown", "Phrase"];
-  const phases = ["Anchor", "Baseline"];
+  const phases = ["Anchor"]
 //   const phases = ["Anchor", "Baseline", "Proposed"];
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -184,6 +184,7 @@ export default function Home() {
     const json = JSON.stringify(keyPresses);
     // const json = JSON.stringify("test");
     console.log(json);
+    console.log(process.env.client_email);
     const response = await fetch("/upload", {
       method: "POST",
       headers: {
