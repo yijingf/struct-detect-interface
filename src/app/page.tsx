@@ -18,8 +18,9 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
-    `excerpts/${first}/${filename}`,
-    `excerpts/${second}/${filename}`,
+    `excerpts/Basline/${filename}`,
+    // `excerpts/${first}/${filename}`,
+    // `excerpts/${second}/${filename}`,
   ];
 });
 
@@ -40,7 +41,7 @@ export default function Home() {
 
   // Define the order of phases and phrases
   const actions = ["PromptCountdown", "Phrase"];
-  const phases = ["Anchor", "Baseline", "Proposed"];
+  const phases = ["Anchor", "Baseline"];
 //   const phases = ["Anchor", "Baseline", "Proposed"];
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -105,7 +106,7 @@ export default function Home() {
 
     setIsRecording(false);
 
-    const timeToWait = 5;
+    const timeToWait = 1;
 
     countdownInterval = setInterval(() => {
       setCountdown((prevCountdown) => {
