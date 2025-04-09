@@ -19,7 +19,7 @@ const phrases = randomizedFileNames.map((filename) => {
   return [
     `excerpts/Anchor/${filename}`,
     `excerpts/${first}/${filename}`,
-    // `excerpts/${second}/${filename}`,
+    `excerpts/${second}/${filename}`,
   ];
 });
 
@@ -40,7 +40,7 @@ export default function Home() {
 
   // Define the order of phases and phrases
   const actions = ["PromptCountdown", "Phrase"];
-  const phases = ["Anchor"];
+  const phases = ["Anchor", "Baseline", "Proposed"];
 //   const phases = ["Anchor", "Baseline", "Proposed"];
 
   const audioRef = useRef<HTMLAudioElement>(null);
