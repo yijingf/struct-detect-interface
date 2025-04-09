@@ -18,8 +18,7 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
-    `excerpts/Anchor/${filename}`,
-    // `excerpts/${first}/${filename}`,
+    `excerpts/${first}/${filename}`,
     // `excerpts/${second}/${filename}`,
   ];
 });

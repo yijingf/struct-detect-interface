@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error uploading to Google Sheets:", error);
-    console.error("email", process.env.client_email);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
@@ -40,13 +39,13 @@ async function uploadJsonToGoogleSheets(json: any) {
   );
 
   await doc.loadInfo();
+  console.log("Loaded");
 
   const sheet = doc.sheetsByIndex[0];
   // await sheet.setHeaderRow(["phrase", "values"]); // set the header row
 
   // create a unique id for this row
   const id = randomUUID();
-
   const rows = Object.keys(json).map((key) => ({
     id: id,
     phrase: key.replace("excerpts/", ""),
