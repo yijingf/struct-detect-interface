@@ -14,17 +14,40 @@ const fileNames = [
 
 const randomizedFileNames = fileNames.sort(() => Math.random() - 0.5).slice(0, nRun);
 
-const shuffleExp = () =>
-  Math.random() > 0.5 ? ["Baseline", "Proposed"] : ["Proposed", "Baseline"];
+// const shuffleExp = () =>
+//   Math.random() > 0.5 ? ["Baseline", "Proposed"] : ["Proposed", "Baseline"];
 
-const phrases = randomizedFileNames.map((filename) => {
-  const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
-  return [
-    `excerpts/Anchor/${filename}`,
-    `excerpts/${first}/${filename}`,
-    `excerpts/${second}/${filename}`,
-  ];
-});
+// const phrases = randomizedFileNames.map((filename) => {
+//   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
+//   return [
+//     `excerpts/Anchor/${filename}`,
+//     `excerpts/${first}/${filename}`,
+//     `excerpts/${second}/${filename}`,
+//   ];
+// });
+
+// console.log(phrases)
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  };
+  
+  // Create randomized phrases
+  const phrases: string[][] = randomizedFileNames.map((filename) => {
+    const sources: string[] = [
+      `excerpts/Anchor/${filename}`,
+      `excerpts/Baseline/${filename}`,
+      `excerpts/Proposed/${filename}`,
+    ];
+    return shuffleArray(sources);
+  });
+
+console.log(phrases)
 
 export default function Home() {
   const [stage, setStage] = useState<"start" | "training" | "end">("start");
@@ -249,19 +272,19 @@ export default function Home() {
     // const json = JSON.stringify(keyPresses);
     const json = JSON.stringify(flattened);
     console.log(json);
-    // const response = await fetch("/upload", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: json,
-    // });
+    const response = await fetch("/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
 
-    // if (response.ok) {
-    //   console.log("JSON data uploaded successfully");
-    // } else {
-    //   console.error("Failed to upload JSON data");
-    // }
+    if (response.ok) {
+      console.log("JSON data uploaded successfully");
+    } else {
+      console.error("Failed to upload JSON data");
+    }
   };
 
   switch (stage) {
@@ -442,7 +465,8 @@ export default function Home() {
                     <div className="text-center">
                         <audio ref={audioRef} src={audioSrc} preload="auto" />
                         <div className="flex items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 mb-6">
-                            Press one of the keys from a to z when you hear a new musical idea (including the first musical idea).
+                            Press one of the keys from a to z when you hear a new musical idea<br />
+                            including the first musical idea
                         </div>
                         {/* <div className="text-2xl text-gray-800 mb-6">Start</div> */}
 
