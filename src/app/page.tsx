@@ -2,14 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const nRun = 1;
 const fileNames = [
+    "02.wav",
     "03.wav",
-    "04.wav",
-//   "04.wav",
-//   "05.wav",
+    "05.wav",
+    "07.wav",
+    "08.wav",
+    "09.wav",
 ];
 
-const randomizedFileNames = fileNames.sort(() => Math.random() - 0.5);
+const randomizedFileNames = fileNames.sort(() => Math.random() - 0.5).slice(0, nRun);
 
 const shuffleExp = () =>
   Math.random() > 0.5 ? ["Baseline", "Proposed"] : ["Proposed", "Baseline"];
@@ -18,8 +21,8 @@ const phrases = randomizedFileNames.map((filename) => {
   const [first, second] = shuffleExp(); // Get a randomized order for 'MT' and 'MASS'
   return [
     `excerpts/Anchor/${filename}`,
-    `excerpts/Baseline/${filename}`,
-    // `excerpts/${second}/${filename}`,
+    `excerpts/${first}/${filename}`,
+    `excerpts/${second}/${filename}`,
   ];
 });
 
@@ -27,6 +30,8 @@ export default function Home() {
   const [stage, setStage] = useState<"start" | "training" | "end">("start");
   const [isRecording, setIsRecording] = useState(false);
   const [keyPresses, setKeyPresses] = useState<Record<string, number[]>>({});
+
+  const [keypressMessage, setKeypressMessage] = useState<string | null>(null);
 
   const [ratings, setRatings] = useState<
       Record<string, { rating1: number; rating2: number }>
@@ -44,13 +49,12 @@ export default function Home() {
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [currentActionIndex, setCurrentActionIndex] = useState(-1);
-  const [countdown, setCountdown] = useState(1);
+  const [countdown, setCountdown] = useState(5);
 
   // Define the order of phases and phrases
 //   const actions = ["PromptCountdown", "Phrase", "Rate"];
-  const actions = ["Phrase", "Rate", "PromptCountdown"];
-  const phases = ["Anchor", "Baseline"];
-//   const phases = ["Anchor", "Baseline", "Proposed"];
+  const actions = [ "PromptCountdown", "Phrase", "Rate",];
+  const phases = ["Anchor", "Baseline", "Proposed"];
 
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -131,7 +135,7 @@ export default function Home() {
 
     setIsRecording(false);
 
-    const timeToWait = 1;
+    const timeToWait = 5;
 
     countdownInterval = setInterval(() => {
       setCountdown((prevCountdown) => {
@@ -187,7 +191,14 @@ export default function Home() {
           [key]: [...existingKeyPresses, relativeTime],
         };
       });
+      setKeypressMessage("New musical idea detected");
+
+      // Clear the message after .5 sec
+      setTimeout(() => {
+        setKeypressMessage(null);
+        }, 500);
     };
+
 
     if (isRecording) {
       window.addEventListener("keydown", recordKeyPress);
@@ -238,19 +249,19 @@ export default function Home() {
     // const json = JSON.stringify(keyPresses);
     const json = JSON.stringify(flattened);
     console.log(json);
-    const response = await fetch("/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: json,
-    });
+    // const response = await fetch("/upload", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: json,
+    // });
 
-    if (response.ok) {
-      console.log("JSON data uploaded successfully");
-    } else {
-      console.error("Failed to upload JSON data");
-    }
+    // if (response.ok) {
+    //   console.log("JSON data uploaded successfully");
+    // } else {
+    //   console.error("Failed to upload JSON data");
+    // }
   };
 
   switch (stage) {
@@ -259,46 +270,61 @@ export default function Home() {
         <div className="flex justify-center items-center h-screen bg-gray-100">
           <div>
             <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">
-              Welcome to the Finger Tapping Test
+              Welcome to the nextGEN Muic Evaluation Test
             </h1>
             <h2 className="text-xl text-gray-600 mb-4">
-              This test contains 10 runs and will take approximately 15 minutes.
+                Thank you for your interest. This listening test takes approximately 15 minutes.
             </h2>
+
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">
               Instructions
             </h2>
-            <ul className="list-disc list-inside text-gray-600 text-lg mb-4">
-              <li>For each run, you will hear four music excerpts.</li>
-              <li>
-                Tap along to the beats by pressing the space bar on your
-                keyboard.
-              </li>
-              <li>
-                Please adjust the volume on your device using the sample music
-                excerpt before the test.
-              </li>
+
+            <ul className="list-disc list-inside text-gray-600 text-l mb-4" style={{ width: '750px' }}>
+                <li>Please complete this test on a computer with a headset.</li>
+                <li>You will hear 9 music excerpts, with 5 secs of silence between excerpts.</li>
+                <li> For each exerpt, you will perform two tasks:
+                <ul className="list-disc list-inside ml-4">
+                    <li>During listening, press one of the keys from a to z when you hear a new musical idea <strong>(including the first musical idea)</strong>.</li>
+                    <li>After listening, rate the entire excerpt based on its musicality and coherence.</li>
+                </ul>
+                </li>
+                <li>Watch the video below before the test to familiarize yourself with what a new music idea sounds like.</li>
             </ul>
 
-            <h2 className="text-center text-2xl font-semibold text-gray-700 mb-2">
+            {/* <h2 className="text-center text-2xl font-semibold text-gray-700 mb-2">
               Sample Music Excerpt
-            </h2>
-            <audio
-              src="excerpts/Anchor/03.wav"
+            </h2> */}
+
+            {/* <div className="w-full max-w-screen-lg mx-auto overflow-x-auto" style={{ height:    '200px' }}>
+            <MidiVisualizer midiUrl="mozart-sonata11-3_new.mid" />
+            </div> */}
+
+            <video
+                src="example.mp4" preload="auto"
+                controls
+                className="w-full max-w-xl mb-2 mx-auto block"
+            />
+
+            {/* <audio
+              src="example.wav"
               preload="auto"
               controls
               className="mb-2 mx-auto"
-            />
+            /> */}
+
             <div className="flex">
               <button
                 onClick={startTraining}
                 className="mx-auto bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-gray-700"
               >
-                Start Tapping
+                Start Test!
               </button>
             </div>
           </div>
         </div>
       );
+    
     case "training":
       return (
         <div className="h-screen bg-gray-100 flex flex-col justify-between">
@@ -323,12 +349,12 @@ export default function Home() {
               {actions[currentActionIndex] === "Rate" ? (
                   <div className="text-center">
                     <div className="text-3xl font-bold text-gray-800 mb-6">
-                        Please rate the excerpt you just heard.
+                        Please rate the entire excerpt you just heard.
                     </div>
                     
                     <div className="mb-6">
                         <div className="text-lg text-gray-700 mb-2">
-                            1. How natural did the rhythm feel?
+                            1. Musicality
                         </div>
                         <div className="flex justify-center space-x-4">
                             {[1, 2, 3, 4, 5].map((num) => (
@@ -348,7 +374,7 @@ export default function Home() {
 
                     <div className="mb-6">
                         <div className="text-lg text-gray-700 mb-2">
-                            2. How well could you synchronize your taps?
+                            2. Coherence
                         </div>
                         <div className="flex justify-center space-x-4">
                             {[1, 2, 3, 4, 5].map((num) => (
@@ -366,6 +392,27 @@ export default function Home() {
                                 ))}
                         </div>
                     </div>
+
+                    {/* <div className="mb-6">
+                    <div className="text-lg text-gray-700 mb-2">
+                            3. Resemble a classical sonata?
+                    </div>
+                    <div className="flex justify-center space-x-4">
+                            {[1, 2, 3, 4, 5].map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => setRating3(num)}
+                                    className={`w-10 h-10 rounded-full ${
+                                    rating3 === num
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-gray-200 text-gray-700"
+                                    }`}
+                                >
+                                    {num}
+                                </button>
+                                ))}
+                        </div>
+                    </div> */}
 
                     <button
                         onClick={() => {
@@ -394,10 +441,16 @@ export default function Home() {
               ): actions[currentActionIndex] === "Phrase" ? (
                     <div className="text-center">
                         <audio ref={audioRef} src={audioSrc} preload="auto" />
-                        <div className="text-3xl font-bold text-gray-800 mb-6">
-                            Please tap to the beats in the way you perceive them.
+                        <div className="flex items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 mb-6">
+                            Press one of the keys from a to z when you hear a new musical idea (including the first musical idea).
                         </div>
-                        <div className="text-2xl text-gray-800 mb-6">Start tapping</div>
+                        {/* <div className="text-2xl text-gray-800 mb-6">Start</div> */}
+
+                        {/* Key press msg */}
+                        {/* <div className="message-conainer"> */}
+                        <div className="text-xl text-gray-800 mt-8">
+                            {keypressMessage && <p>{keypressMessage}</p>}
+                        </div>
                     </div>
                 ) : (
                     <div className="text-center">
