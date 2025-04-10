@@ -47,7 +47,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
     return shuffleArray(sources);
   });
 
-console.log(phrases)
+// console.log(phrases)
 
 export default function Home() {
   const [stage, setStage] = useState<"start" | "training" | "end">("start");
@@ -295,7 +295,7 @@ export default function Home() {
             <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">
               Welcome to the nextGEN Muic Evaluation Test
             </h1>
-            <h2 className="text-xl text-gray-600 mb-4">
+            <h2 className="text-l text-gray-600 mb-4">
                 Thank you for your interest. This listening test takes approximately 15 minutes.
             </h2>
 
@@ -310,6 +310,7 @@ export default function Home() {
                 <ul className="list-disc list-inside ml-4">
                     <li>During listening, press one of the keys from a to z when you hear a new musical idea <strong>(including the first musical idea)</strong>.</li>
                     <li>After listening, rate the entire excerpt based on its musicality and coherence.</li>
+                    <li>Note: It might take a few seconds for each excerpt to start playing - this is normal.</li>
                 </ul>
                 </li>
                 <li>Watch the video below before the test to familiarize yourself with what a new music idea sounds like.</li>
@@ -326,7 +327,8 @@ export default function Home() {
             <video
                 src="example.mp4" preload="auto"
                 controls
-                className="w-full max-w-xl mb-2 mx-auto block"
+                className="w-full max-w-lg mx-auto mb-2 block"
+                // className="w-full max-w-xl mb-2 mx-auto block"
             />
 
             {/* <audio
@@ -464,15 +466,29 @@ export default function Home() {
               ): actions[currentActionIndex] === "Phrase" ? (
                     <div className="text-center">
                         <audio ref={audioRef} src={audioSrc} preload="auto" />
-                        <div className="flex items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 mb-6">
-                            Press one of the keys from a to z when you hear a new musical idea<br />
+
+                        <div className="flex flex-col items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 space-y-4">
+                        
+                        <div>
+                            Press one of the keys from A to Z when you hear a new musical idea<br />
                             including the first musical idea
                         </div>
-                        {/* <div className="text-2xl text-gray-800 mb-6">Start</div> */}
+
+                        </div>
+
+                        {/* <div className="flex items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 mb-6">
+
+                            <div>
+                                Press one of the keys from A to Z when you hear a new musical idea<br />
+                                including the first musical idea <br />
+                            </div>
+
+                            <div className="text-2xl text-gray-800 mb-6">Start</div>
+                        </div> */}
 
                         {/* Key press msg */}
                         {/* <div className="message-conainer"> */}
-                        <div className="text-xl text-gray-800 mt-8">
+                        <div className="text-xl text-gray-800 mt-20">
                             {keypressMessage && <p>{keypressMessage}</p>}
                         </div>
                     </div>
