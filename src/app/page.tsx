@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const nRun = 1;
+const nRun = 3;
 const fileNames = [
     "02.wav",
     "03.wav",
