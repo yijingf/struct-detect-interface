@@ -308,7 +308,7 @@ export default function Home() {
                 <li>You will hear 9 music excerpts, with 5 secs of silence between excerpts.</li>
                 <li> For each exerpt, you will perform two tasks:
                 <ul className="list-disc list-inside ml-4">
-                    <li>During listening, press one of the keys from a to z when you hear a new musical idea <strong>(including the first musical idea)</strong>.</li>
+                    <li>During listening, press one of the keys from a to z when the music starts and when you hear a new musical idea.</li>
                     <li>After listening, rate the entire excerpt based on its musicality and coherence.</li>
                     <li>Note: It might take a few seconds for each excerpt to start playing - this is normal.</li>
                 </ul>
@@ -470,21 +470,10 @@ export default function Home() {
                         <div className="flex flex-col items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 space-y-4">
                         
                         <div>
-                            Press one of the keys from A to Z when you hear a new musical idea<br />
-                            including the first musical idea
+                            Press one of the keys from a to z when the music starts and when you hear a new musical idea.
+                        </div>
                         </div>
 
-                        </div>
-
-                        {/* <div className="flex items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 mb-6">
-
-                            <div>
-                                Press one of the keys from A to Z when you hear a new musical idea<br />
-                                including the first musical idea <br />
-                            </div>
-
-                            <div className="text-2xl text-gray-800 mb-6">Start</div>
-                        </div> */}
 
                         {/* Key press msg */}
                         {/* <div className="message-conainer"> */}
