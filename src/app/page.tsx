@@ -6,10 +6,10 @@ const nRun = 3;
 const fileNames = [
     "02.wav",
     "03.wav",
-    "05.wav",
     "07.wav",
     "08.wav",
     "09.wav",
+    "10.wav",
 ];
 
 const randomizedFileNames = fileNames.sort(() => Math.random() - 0.5).slice(0, nRun);
@@ -325,7 +325,7 @@ export default function Home() {
             </div> */}
 
             <video
-                src="example.mp4" preload="auto"
+                src="example_melody.mp4" preload="auto"
                 controls
                 className="w-full max-w-lg mx-auto mb-2 block"
                 // className="w-full max-w-xl mb-2 mx-auto block"
