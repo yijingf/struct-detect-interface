@@ -468,26 +468,32 @@ export default function Home() {
                         <audio ref={audioRef} src={audioSrc} preload="auto" />
 
                         <div className="flex flex-col items-center justify-center fixed inset-0 text-2xl font-bold text-gray-800 space-y-4">
-                        
-                        <div>
-                            Press one of the keys from a to z when the music starts and when you hear a new musical idea.
-                        </div>
+                            <div>
+                            Press one of the keys from a to z when
+                            <li>
+                                the music starts
+                            </li>
+                            <li>
+                                you hear a new musical idea
+                            </li>
+                            </div>            
                         </div>
 
 
                         {/* Key press msg */}
                         {/* <div className="message-conainer"> */}
-                        <div className="text-xl text-gray-800 mt-20">
+                        <div className="text-xl text-gray-800 mt-28">
                             {keypressMessage && <p>{keypressMessage}</p>}
                         </div>
                     </div>
                 ) : (
                     <div className="text-center">
                         <div className="text-3xl font-bold text-gray-800 mb-6">
-                            Get ready for the next excerpt.
+                            Get ready for the next excerpt. < br/>
+                            Press a key when the music starts.
                         </div>
                         <div className="text-2xl text-gray-800 mb-6">
-                            Countdown: {countdown} seconds
+                            The next excerpt starts in {countdown} seconds
                             </div>
                         </div>
                 )}
